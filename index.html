@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stuff for sale · Cosas en venta</title>
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap");
+
+  :root {
+    --paper: #f3eadc;
+    --paper-2: #efe4d2;
+    --ink: #1b1612;
+    --ink-soft: #4a433b;
+    --rule: #c9b89a;
+    --rule-strong: #2a241c;
+    --wax: #9c2a1c;
+    --wax-deep: #6e1810;
+    --olive: #3a4a32;
+    --olive-soft: #d7e0cf;
+    --sold-red: #b11a14;
+    --card: #fffaf1;
+    --shadow: 0 18px 40px -24px rgba(40, 24, 8, 0.45);
+    --display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1200px 500px at 10% -10%, rgba(156, 42, 28, 0.06), transparent 50%),
+      radial-gradient(900px 400px at 110% 8%, rgba(58, 74, 50, 0.07), transparent 46%),
+      var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.5;
+  }
+
+  .wrap {
+    width: min(1120px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 28px 0 64px;
+  }
+
+  header.mast {
+    border-top: 3px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule);
+    padding: 22px 0 26px;
+    margin-bottom: 28px;
+  }
+  .kicker {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(52px, 12vw, 108px);
+    line-height: 0.86;
+    letter-spacing: -0.03em;
+    margin: 10px 0 8px;
+  }
+  h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--wax);
+  }
+  .lede {
+    display: grid;
+    grid-template-columns: 1.3fr 0.9fr;
+    gap: 28px;
+    align-items: end;
+    margin-top: 8px;
+  }
+  .lede p {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(17px, 2.1vw, 21px);
+    line-height: 1.35;
+    max-width: 42ch;
+  }
+  .meta {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+  .meta strong { color: var(--ink); font-weight: 600; }
+  .contact-blank {
+    margin-top: 10px;
+    border-bottom: 1px dashed var(--rule);
+    min-height: 1.4em;
+    font-size: 13px;
+    color: #8a7d6c;
+  }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 6px 0 22px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .toolbar b { color: var(--ink); }
+  .hint { font-style: italic; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 20px;
+  }
+
+  article.card {
+    background: var(--card);
+    border: 1px solid #e4d6bf;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  article.card.sold { background: #f4eee6; }
+
+  .photo {
+    position: relative;
+    aspect-ratio: 5 / 4;
+    background: #d8cbb6;
+    overflow: hidden;
+  }
+  .photo img.hero {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    cursor: pointer;
+    transition: filter 180ms ease, opacity 180ms ease, transform 400ms ease;
+  }
+  .photo img.hero:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -3px;
+  }
+  article.card:hover .photo img.hero { transform: scale(1.03); }
+  article.card.sold .photo img.hero {
+    filter: grayscale(1) contrast(0.95);
+    opacity: 0.42;
+    transform: none;
+  }
+
+  .idx {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-family: var(--display);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    color: #fff;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.45);
+    z-index: 2;
+  }
+
+  .thumbs {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: flex;
+    gap: 6px;
+    z-index: 2;
+  }
+  .thumbs button {
+    width: 54px;
+    height: 54px;
+    padding: 0;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.28);
+    cursor: pointer;
+    background: #ccc;
+    overflow: hidden;
+  }
+  .thumbs img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .stamp {
+    display: none;
+    position: absolute;
+    inset: 0;
+    place-items: center;
+    pointer-events: none;
+    z-index: 3;
+  }
+  article.card.sold .stamp { display: grid; }
+  .stamp span {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(42px, 6vw, 64px);
+    letter-spacing: 0.12em;
+    color: var(--sold-red);
+    border: 6px solid var(--sold-red);
+    padding: 2px 16px 8px;
+    transform: rotate(-16deg);
+    mix-blend-mode: multiply;
+    opacity: 0.92;
+    text-shadow: 1px 1px 0 #1a0a08;
+    box-shadow: inset 0 0 0 2px #1a0a08, 0 0 0 2px #1a0a08;
+    background: rgba(20, 8, 6, 0.08);
+  }
+
+  .body {
+    padding: 16px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  .toprow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .chip {
+    flex: 0 0 auto;
+    border: 1px solid var(--olive);
+    background: var(--olive-soft);
+    color: var(--olive);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 9px 4px;
+    cursor: pointer;
+    border-radius: 999px;
+    font-family: var(--sans);
+  }
+  .chip:hover { filter: brightness(0.96); }
+  .chip:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  article.card.sold .chip {
+    background: #1b1612;
+    border-color: #1b1612;
+    color: #f6efe4;
+  }
+
+  .inc {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+  .inc strong {
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .price-row {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #eadcc6;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .ask {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(16px, 2.1vw, 22px);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  article.card.sold .ask {
+    color: #8a8074;
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+  }
+  .ask small {
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .compare {
+    text-align: right;
+    font-size: 12px;
+    color: #7a7064;
+  }
+  .compare s {
+    color: #9a8d7c;
+    text-decoration-thickness: 1px;
+  }
+  .note {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin: 0;
+  }
+
+  .footnote {
+    margin: 28px 0 0;
+    padding: 14px 16px;
+    border-left: 3px solid var(--rule);
+    color: var(--ink-soft);
+    font-size: 13.5px;
+  }
+  footer.colophon {
+    margin-top: 26px;
+    padding-top: 16px;
+    border-top: 3px solid var(--rule-strong);
+    display: grid;
+    gap: 8px;
+  }
+  footer.colophon p {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 17px;
+    line-height: 1.4;
+  }
+  .fine {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 760px) {
+    .wrap { width: min(100% - 22px, 640px); padding-top: 16px; }
+    .lede { grid-template-columns: 1fr; gap: 12px; }
+    .meta { text-align: left; }
+    .grid { grid-template-columns: 1fr; gap: 18px; }
+    h1 { font-size: 64px; }
+    h2 { font-size: 21px; }
+    .photo { aspect-ratio: 4 / 3; }
+    .ask { font-size: 34px; }
+    article.card:hover .photo img.hero { transform: none; }
+  }
+
+
+
+  .es {
+    display: block;
+    font-family: var(--sans);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink-soft);
+    line-height: 1.3;
+  }
+  h1 .es {
+    font-family: var(--display);
+    font-size: clamp(22px, 4.2vw, 36px);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+    margin-top: 10px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  h1 .es em { font-style: italic; color: var(--wax); font-weight: 400; }
+  h2 .es {
+    font-size: 14.5px;
+    margin-top: 4px;
+  }
+  .kicker .es {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    margin-top: 3px;
+    text-transform: none;
+  }
+  .lede .es {
+    font-size: 0.88em;
+    margin-top: 6px;
+    max-width: 46ch;
+  }
+  .meta .es {
+    font-size: 12.5px;
+    margin-top: 1px;
+  }
+  .hint .es { font-size: 12px; margin-top: 2px; }
+  .inc .es { font-size: 13px; margin-top: 3px; }
+  .note .es { display: inline; font-style: italic; }
+  .compare .es { font-size: 11.5px; margin-top: 2px; }
+  footer.colophon .es { font-size: 15px; margin-top: 4px; }
+  .fine .es { font-size: 12px; margin-top: 2px; }
+  .stamp span { text-align: center; line-height: 1.05; }
+  .stamp .es {
+    font-size: 0.42em;
+    letter-spacing: 0.16em;
+    color: var(--sold-red);
+    margin-top: 0;
+  }
+  .photo-count .es { display: inline; color: inherit; font-style: normal; }
+
+  .photo-count {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    z-index: 2;
+    background: rgba(27, 22, 18, 0.72);
+    color: #fffaf1;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 9px 4px;
+    border-radius: 999px;
+    pointer-events: none;
+    font-family: var(--sans);
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: none;
+    align-items: stretch;
+    justify-content: center;
+  }
+  .lightbox.open { display: flex; }
+  html.lb-open,
+  html.lb-open body { overflow: hidden; }
+
+  .lb-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(18, 12, 8, 0.88);
+    border: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .lb-stage {
+    position: relative;
+    z-index: 1;
+    width: min(1080px, calc(100% - 28px));
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    max-height: 100dvh;
+    padding: 56px 8px 20px;
+    pointer-events: none;
+  }
+  .lb-stage > * { pointer-events: auto; }
+
+  .lb-frame {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 0;
+  }
+
+  .lb-img {
+    max-width: 100%;
+    max-height: min(72dvh, 860px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    background: #1b1612;
+  }
+
+  .lb-close, .lb-prev, .lb-next {
+    font-family: var(--display);
+    background: var(--card);
+    color: var(--ink);
+    border: 1px solid #e4d6bf;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.28);
+  }
+  .lb-close:hover, .lb-prev:hover, .lb-next:hover { background: #fff; }
+  .lb-close:focus-visible,
+  .lb-prev:focus-visible,
+  .lb-next:focus-visible,
+  .lb-strip button:focus-visible {
+    outline: 2px solid #fffaf1;
+    outline-offset: 2px;
+  }
+
+  .lb-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  .lb-prev, .lb-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    font-size: 30px;
+    line-height: 1;
+    z-index: 2;
+  }
+  .lb-prev { left: 10px; }
+  .lb-next { right: 10px; }
+  .lightbox.single .lb-prev,
+  .lightbox.single .lb-next { display: none; }
+
+  .lb-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    width: 100%;
+    color: #efe4d2;
+    font-size: 13px;
+  }
+  .lb-caption {
+    font-family: var(--display);
+    font-size: 18px;
+    color: #fffaf1;
+  }
+  .lb-counter {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: #c9b89a;
+    white-space: nowrap;
+  }
+
+  .lb-strip {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    max-width: 100%;
+    padding: 2px 0 8px;
+    scrollbar-width: thin;
+  }
+  .lb-strip button {
+    width: 62px;
+    height: 62px;
+    padding: 0;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    cursor: pointer;
+    background: #3a3228;
+    overflow: hidden;
+    flex: 0 0 auto;
+  }
+  .lb-strip button[aria-current="true"] {
+    border-color: #fffaf1;
+    box-shadow: 0 0 0 2px var(--wax);
+  }
+  .lb-strip img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 760px) {
+    .lb-prev { left: 0; }
+    .lb-next { right: 0; }
+    .lb-img { max-height: min(62dvh, 640px); }
+    .lb-stage { padding: 52px 0 16px; }
+  }
+
+  @page { size: letter portrait; margin: 0.32in 0.34in; }
+  @media print {
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: #fff !important; }
+    .wrap { width: 100%; padding: 0; }
+    .hint, .thumbs, .toolbar, .photo-count, .lightbox { display: none !important; }
+    header.mast { padding: 2px 0 6px; margin-bottom: 8px; }
+    .kicker { font-size: 8px; letter-spacing: 0.14em; }
+    h1 { font-size: 28px; margin: 0 0 2px; line-height: 0.9; }
+    .lede { grid-template-columns: 1.3fr 1fr; gap: 8px; align-items: start; }
+    .lede p { font-size: 11px; max-width: none; }
+    .meta { font-size: 9px; line-height: 1.3; }
+    .contact-blank { margin-top: 2px; font-size: 9px; min-height: 0.9em; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 7px 8px; }
+    article.card {
+      box-shadow: none;
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .photo { aspect-ratio: auto; height: 100%; min-height: 88px; }
+    .body { padding: 4px 7px 5px; gap: 2px; }
+    h2 { font-size: 11px; line-height: 1.12; }
+    .chip { font-size: 7px; padding: 1px 5px 0; letter-spacing: 0.06em; cursor: default; }
+    .inc {
+      font-size: 8px;
+      line-height: 1.25;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+    .inc strong { font-size: 7px; margin-bottom: 0; display: inline; margin-right: 3px; }
+    .note { font-size: 7.5px; }
+    .price-row { padding-top: 2px; }
+    .ask { font-size: 10px; }
+    .ask small { font-size: 12px; }
+    .compare { font-size: 7.5px; }
+    .stamp span { font-size: 18px; border-width: 2px; padding: 0 5px 1px; }
+    .footnote { margin: 8px 0 0; padding: 4px 6px; font-size: 8px; }
+    footer.colophon { margin-top: 8px; padding-top: 5px; gap: 2px; }
+    footer.colophon p { font-size: 11px; }
+    .fine { font-size: 8px; }
+    article.card:hover .photo img.hero { transform: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="mast">
+      <div class="kicker">
+        <span>Roma Sur</span>
+        <span>20 items · Everything works<span class="es" lang="es">20 artículos · Todo funciona</span></span>
+      </div>
+      <h1>Stuff for <em>sale</em><span class="es" lang="es">Cosas en <em>venta</em></span></h1>
+      <div class="lede">
+        <p>Pickup preferred, or Uber delivery by request. All items in good condition and working order.<span class="es" lang="es">Se prefiere recoger en persona, o envío por Uber a petición. Todo en buen estado y funcionando.</span></p>
+        <div class="meta">
+          <div>Roma Sur</div>
+          <div>Pickup preferred, or Uber delivery by request<span class="es" lang="es">Se prefiere recoger en persona, o envío por Uber a petición</span></div>
+          <div>Message me on WhatsApp to claim an item<span class="es" lang="es">Escríbeme por WhatsApp para apartar un artículo</span></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="hint">Tap a photo to open the rest<span class="es" lang="es">Toca una foto para ver el resto</span></div>
+    </div>
+
+    <main class="grid" id="catalog">
+
+      <article class="card" data-id="apple-mac-mini-m4-pro" data-title-en="Apple Mac mini M4 Pro, 24GB" data-title-es="Apple Mac mini M4 Pro, 24 GB" data-photos="[&quot;photos/PXL_20260902_013140927.jpg&quot;,&quot;photos/PXL_20260902_013150837.jpg&quot;,&quot;photos/PXL_20260902_013200403.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">01</span>
+          <img class="hero" src="photos/PXL_20260902_013140927.jpg" data-photo="photos/PXL_20260902_013140927.jpg" tabindex="0" role="button" alt="Apple Mac mini M4 Pro, front ports and top logo / Apple Mac mini M4 Pro, puertos frontales y logo superior">
+          <div class="thumbs">
+            <button type="button" aria-label="Rear ports / Puertos traseros" data-photo="photos/PXL_20260902_013150837.jpg">
+              <img src="photos/PXL_20260902_013150837.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Top logo / Logo superior" data-photo="photos/PXL_20260902_013200403.jpg">
+              <img src="photos/PXL_20260902_013200403.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Apple Mac mini M4 Pro, 24GB<span class="es" lang="es">Apple Mac mini M4 Pro, 24 GB</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Mini, 24GB unified memory, 512GB storage.<span class="es" lang="es">Mini, 24 GB de memoria unificada, 512 GB de almacenamiento.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$17,800mxn / $1,050USD</div>
+            <div class="compare">New at Apple México<span class="es" lang="es">Nuevo en Apple México</span><br><s>$34,499mxn / $2,032USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="bedjet-3" data-title-en="BedJet 3 Climate Comfort (single zone) + King Cloud Sheet" data-title-es="BedJet 3 Climate Comfort (zona simple) + King Cloud Sheet" data-photos="[&quot;photos/bedjet-kit.jpg&quot;,&quot;photos/bedjet-top.jpg&quot;,&quot;photos/bedjet-front.jpg&quot;,&quot;photos/bedjet-remote.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">02</span>
+          <img class="hero" src="photos/bedjet-kit.jpg" data-photo="photos/bedjet-kit.jpg" tabindex="0" role="button" alt="BedJet 3 single-zone kit with King Cloud Sheet / Kit BedJet 3 de zona simple con King Cloud Sheet">
+          <div class="thumbs">
+            <button type="button" aria-label="Top / Arriba" data-photo="photos/bedjet-top.jpg">
+              <img src="photos/bedjet-top.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Front / Frente" data-photo="photos/bedjet-front.jpg">
+              <img src="photos/bedjet-front.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Remote / Control" data-photo="photos/bedjet-remote.jpg">
+              <img src="photos/bedjet-remote.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>BedJet 3 Climate Comfort (single zone) + King Cloud Sheet<span class="es" lang="es">BedJet 3 Climate Comfort (zona simple) + King Cloud Sheet</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> BedJet 3 unit, hose/nozzle, wireless LCD remote, King Cloud Sheet (single zone), mounting hardware.<span class="es" lang="es">Unidad BedJet 3, manguera/boquilla, control inalámbrico LCD, King Cloud Sheet (zona simple), herrajes.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$9,400mxn / $555USD</div>
+            <div class="compare">New ~ unit $569 + King Cloud Sheet $169<span class="es" lang="es">Nuevo ~ unidad $569 + King Cloud Sheet $169</span><br><s>$12,500mxn / $738USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="canakit-pi5-8gb" data-title-en="CanaKit Raspberry Pi 5 (8 GB) with official case and extras" data-title-es="CanaKit Raspberry Pi 5 (8 GB) con carcasa oficial y extras" data-photos="[&quot;photos/PXL_20260826_134815873.jpg&quot;,&quot;photos/PXL_20260826_134841086.jpg&quot;,&quot;photos/PXL_20260826_134842682.jpg&quot;,&quot;photos/PXL_20260826_134851216.jpg&quot;,&quot;photos/PXL_20260826_134905678.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">03</span>
+          <img class="hero" src="photos/PXL_20260826_134815873.jpg" data-photo="photos/PXL_20260826_134815873.jpg" tabindex="0" role="button" alt="CanaKit Raspberry Pi 5 kit with official case, power supply, and cables / Kit CanaKit Raspberry Pi 5 con carcasa oficial, fuente y cables">
+          <div class="thumbs">
+            <button type="button" aria-label="Internals / Interior" data-photo="photos/PXL_20260826_134841086.jpg">
+              <img src="photos/PXL_20260826_134841086.jpg" alt="">
+            </button>
+            <button type="button" aria-label="PSU / ports / Fuente y puertos" data-photo="photos/PXL_20260826_134851216.jpg">
+              <img src="photos/PXL_20260826_134851216.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>CanaKit Raspberry Pi 5 (8 GB) with official case and extras<span class="es" lang="es">CanaKit Raspberry Pi 5 (8 GB) con carcasa oficial y extras</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> 8GB board, official case, USB-C PSU, micro-HDMI, cooler, ADATA V10 64GB microSD.<span class="es" lang="es">Placa de 8 GB, carcasa oficial, fuente USB-C, micro-HDMI, cooler, microSD ADATA V10 de 64 GB.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$3,100mxn / $185USD</div>
+            <div class="compare">New (CanaKit) ~<span class="es" lang="es">Nuevo (CanaKit) ~</span><br><s>$4,250mxn / $250USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="rode-podmic-usb" data-title-en="RØDE PodMic USB + desktop stand" data-title-es="RØDE PodMic USB + pedestal de escritorio" data-photos="[&quot;photos/PXL_20260826_134338659.jpg&quot;,&quot;photos/PXL_20260826_134357354.jpg&quot;,&quot;photos/PXL_20260826_134408629.jpg&quot;,&quot;photos/PXL_20260826_134411944.jpg&quot;,&quot;photos/PXL_20260826_134422929.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">04</span>
+          <img class="hero" src="photos/PXL_20260826_134411944.jpg" data-photo="photos/PXL_20260826_134411944.jpg" tabindex="0" role="button" alt="RØDE PodMic USB on desktop stand / RØDE PodMic USB en pedestal de escritorio">
+          <div class="thumbs">
+            <button type="button" aria-label="Box / Caja" data-photo="photos/PXL_20260826_134338659.jpg">
+              <img src="photos/PXL_20260826_134338659.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Mic close-up / Detalle del micrófono" data-photo="photos/PXL_20260826_134357354.jpg">
+              <img src="photos/PXL_20260826_134357354.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>RØDE PodMic USB + desktop stand<span class="es" lang="es">RØDE PodMic USB + pedestal de escritorio</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Mic (XLR + USB-C), original box, desktop stand, pop filter.<span class="es" lang="es">Micrófono (XLR + USB-C), caja original, pedestal de escritorio, filtro antipop.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$2,600mxn / $155USD</div>
+            <div class="compare">New in Mexico ~<span class="es" lang="es">Nuevo en México ~</span><br><s>$4,732mxn / $279USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="atmotube-pro" data-title-en="Atmotube Pro portable air quality monitor" data-title-es="Atmotube Pro, monitor portátil de calidad del aire" data-photos="[&quot;photos/PXL_20260826_133255400.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">05</span>
+          <img class="hero" src="photos/PXL_20260826_133255400.jpg" data-photo="photos/PXL_20260826_133255400.jpg" tabindex="0" role="button" alt="Atmotube Pro portable air quality monitor with quick start guide / Atmotube Pro, monitor portátil de calidad del aire con guía rápida">
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Atmotube Pro portable air quality monitor<span class="es" lang="es">Atmotube Pro, monitor portátil de calidad del aire</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Unit, carabiner, Quick Start Guide. USB rechargeable.<span class="es" lang="es">Unidad, mosquetón, guía rápida. Recargable por USB.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$1,700mxn / $100USD</div>
+            <div class="compare">New in Mexico ~<span class="es" lang="es">Nuevo en México ~</span><br><s>$4,050mxn / $239USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="shure-mvx2u" data-title-en="Shure MVX2U XLR-to-USB interface" data-title-es="Shure MVX2U, interfaz XLR a USB" data-photos="[&quot;photos/PXL_20260826_134943539.jpg&quot;,&quot;photos/PXL_20260826_134956106.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">06</span>
+          <img class="hero" src="photos/PXL_20260826_134943539.jpg" data-photo="photos/PXL_20260826_134943539.jpg" tabindex="0" role="button" alt="Shure MVX2U XLR-to-USB interface / Interfaz Shure MVX2U de XLR a USB">
+          <div class="thumbs">
+            <button type="button" aria-label="Second angle" data-photo="photos/PXL_20260826_134956106.jpg">
+              <img src="photos/PXL_20260826_134956106.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Shure MVX2U XLR-to-USB interface<span class="es" lang="es">Shure MVX2U, interfaz XLR a USB</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> MVX2U interface. USB-C cable not photographed.<span class="es" lang="es">Interfaz MVX2U. El cable USB-C no aparece en las fotos.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$1,500mxn / $90USD</div>
+            <div class="compare">New in Mexico ~<span class="es" lang="es">Nuevo en México ~</span><br><s>$3,309mxn / $195USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="neewer-x12-teleprompter" data-title-en="Neewer X12 teleprompter kit with hard case" data-title-es="Neewer X12, kit de teleprompter con estuche rígido" data-photos="[&quot;photos/PXL_20260826_133639661.jpg&quot;,&quot;photos/PXL_20260826_134014258.jpg&quot;,&quot;photos/PXL_20260826_134109632.jpg&quot;,&quot;photos/PXL_20260826_134116059.jpg&quot;,&quot;photos/PXL_20260826_134124106.jpg&quot;,&quot;photos/PXL_20260826_134131841.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">07</span>
+          <img class="hero" src="photos/PXL_20260826_134014258.jpg" data-photo="photos/PXL_20260826_134014258.jpg" tabindex="0" role="button" alt="Neewer X12 teleprompter kit laid out with hard case and accessories / Kit de teleprompter Neewer X12 con estuche rígido y accesorios">
+          <div class="thumbs">
+            <button type="button" aria-label="Assembled / Armado" data-photo="photos/PXL_20260826_134109632.jpg">
+              <img src="photos/PXL_20260826_134109632.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Accessories / Accesorios" data-photo="photos/PXL_20260826_134124106.jpg">
+              <img src="photos/PXL_20260826_134124106.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Neewer X12 teleprompter kit with hard case<span class="es" lang="es">Neewer X12, kit de teleprompter con estuche rígido</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Hood/glass, hard case, Bluetooth remote, cloth, hardware.<span class="es" lang="es">Capucha/vidrio, estuche rígido, control Bluetooth, paño, herrajes.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$1,400mxn / $85USD</div>
+            <div class="compare">New on Amazon ~<span class="es" lang="es">Nuevo en Amazon ~</span><br><s>$1,900mxn / $112USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="sharper-image-massage-gun" data-title-en="Sharper Image Power Percussion Pro+ Compact massage gun" data-title-es="Pistola de masaje Sharper Image Power Percussion Pro+ Compact" data-photos="[&quot;photos/PXL_20260826_182632869.jpg&quot;,&quot;photos/PXL_20260826_182638128.jpg&quot;,&quot;photos/PXL_20260826_182645591.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">08</span>
+          <img class="hero" src="photos/PXL_20260826_182632869.jpg" data-photo="photos/PXL_20260826_182632869.jpg" tabindex="0" role="button" alt="Sharper Image Power Percussion Pro+ Compact kit with hard case and heads / Kit Sharper Image Power Percussion Pro+ Compact con estuche y cabezales">
+          <div class="thumbs">
+            <button type="button" aria-label="Gun detail / Detalle de la pistola" data-photo="photos/PXL_20260826_182638128.jpg">
+              <img src="photos/PXL_20260826_182638128.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Brand mark / Marca" data-photo="photos/PXL_20260826_182645591.jpg">
+              <img src="photos/PXL_20260826_182645591.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Sharper Image Power Percussion Pro+ Compact massage gun<span class="es" lang="es">Pistola de masaje Sharper Image Power Percussion Pro+ Compact</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Gun, hard case, heads, USB-C cable.<span class="es" lang="es">Pistola, estuche rígido, cabezales, cable USB-C.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$1,300mxn / $75USD</div>
+            <div class="compare">New comparable ~<span class="es" lang="es">Nuevo comparable ~</span><br><s>$1,700mxn / $100USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="ultrahuman-air-ring" data-title-en="Ultrahuman Ring AIR (size 9), heavily scratched" data-title-es="Ultrahuman Ring AIR (talla 9), muy rayado" data-photos="[&quot;photos/PXL_20260826_134626424.jpg&quot;,&quot;photos/PXL_20260826_134652293.jpg&quot;,&quot;photos/PXL_20260826_134707314.jpg&quot;,&quot;photos/PXL_20260826_134714011.jpg&quot;,&quot;photos/PXL_20260826_134743478.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">09</span>
+          <img class="hero" src="photos/PXL_20260826_134626424.jpg" data-photo="photos/PXL_20260826_134626424.jpg" tabindex="0" role="button" alt="Ultrahuman Ring AIR size 9 with wireless charging dock / Ultrahuman Ring AIR talla 9 con base de carga">
+          <div class="thumbs">
+            <button type="button" aria-label="Charging dock / Base de carga" data-photo="photos/PXL_20260826_134743478.jpg">
+              <img src="photos/PXL_20260826_134743478.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Scratches / Rayones" data-photo="photos/PXL_20260826_134707314.jpg">
+              <img src="photos/PXL_20260826_134707314.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Ultrahuman Ring AIR (size 9), heavily scratched<span class="es" lang="es">Ultrahuman Ring AIR (talla 9), muy rayado</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Size 9 ring + USB-C charging dock. Scratches on the band (shown).<span class="es" lang="es">Anillo talla 9 + base de carga USB-C. Rayones en la banda (se ven en las fotos).</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$1,200mxn / $70USD</div>
+            <div class="compare">New on Amazon ~<span class="es" lang="es">Nuevo en Amazon ~</span><br><s>$5,900mxn / $349USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="neewer-lantern-softbox" data-title-en="Neewer lantern softbox, 65 cm (Bowens mount), with bag" data-title-es="Softbox linterna Neewer, 65 cm (montura Bowens), con bolsa" data-photos="[&quot;photos/PXL_20260816_183229438.jpg&quot;,&quot;photos/PXL_20260816_183234628.jpg&quot;,&quot;photos/PXL_20260816_183247531.jpg&quot;,&quot;photos/PXL_20260816_183252354.jpg&quot;,&quot;photos/PXL_20260816_183313198.jpg&quot;,&quot;photos/PXL_20260816_183334958.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">10</span>
+          <img class="hero" src="photos/PXL_20260816_183229438.jpg" data-photo="photos/PXL_20260816_183229438.jpg" tabindex="0" role="button" alt="Neewer 65 cm lantern softbox standing on a wood floor / Softbox linterna Neewer de 65 cm sobre piso de madera">
+          <div class="thumbs">
+            <button type="button" aria-label="Carry bag / Bolsa" data-photo="photos/PXL_20260816_183334958.jpg">
+              <img src="photos/PXL_20260816_183334958.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Collapsed / Plegado" data-photo="photos/PXL_20260816_183313198.jpg">
+              <img src="photos/PXL_20260816_183313198.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Neewer lantern softbox, 65 cm (Bowens mount), with bag<span class="es" lang="es">Softbox linterna Neewer, 65 cm (montura Bowens), con bolsa</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> 65 cm lantern softbox + NEEWER drawstring bag. No light head.<span class="es" lang="es">Softbox linterna de 65 cm + bolsa de cordón NEEWER. Sin cabezal de luz.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$850mxn / $50USD</div>
+            <div class="compare">New on Amazon ~<span class="es" lang="es">Nuevo en Amazon ~</span><br><s>$1,150mxn / $66USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="lume-cube-panel-mini" data-title-en="Lume Cube Panel Mini (LC-PANELMINI1)" data-title-es="Lume Cube Panel Mini (LC-PANELMINI1)" data-photos="[&quot;photos/lumecube-on.jpg&quot;,&quot;photos/lumecube-leds.jpg&quot;,&quot;photos/lumecube-back.jpg&quot;,&quot;photos/lumecube-back-2.jpg&quot;,&quot;photos/lumecube-back-3.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">11</span>
+          <img class="hero" src="photos/lumecube-on.jpg" data-photo="photos/lumecube-on.jpg" tabindex="0" role="button" alt="Lume Cube Panel Mini on with white silicone diffuser / Lume Cube Panel Mini encendido con difusor de silicón blanco">
+          <div class="thumbs">
+            <button type="button" aria-label="LEDs" data-photo="photos/lumecube-leds.jpg">
+              <img src="photos/lumecube-leds.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Back / Reverso" data-photo="photos/lumecube-back.jpg">
+              <img src="photos/lumecube-back.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Lume Cube Panel Mini (LC-PANELMINI1)<span class="es" lang="es">Lume Cube Panel Mini (LC-PANELMINI1)</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Light + white silicone diffuser. 1–100% brightness, 3200–5600K bi-color, 96+ CRI.<span class="es" lang="es">Luz + difusor de silicón blanco. Brillo 1–100%, bicolor 3200–5600 K, CRI 96+.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$750mxn / $45USD</div>
+            <div class="compare">New on Amazon ~<span class="es" lang="es">Nuevo en Amazon ~</span><br><s>$1,000mxn / $60USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="kuikma-pr190-padel" data-title-en="Kuikma PR 190 padel racket + 2 tennis balls" data-title-es="Raqueta de pádel Kuikma PR 190 + 2 pelotas de tenis" data-photos="[&quot;photos/PXL_20260826_183221987.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">12</span>
+          <img class="hero" src="photos/PXL_20260826_183221987.jpg" data-photo="photos/PXL_20260826_183221987.jpg" tabindex="0" role="button" alt="Kuikma PR 190 padel racket with two tennis balls / Raqueta de pádel Kuikma PR 190 con dos pelotas de tenis">
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Kuikma PR 190 padel racket + 2 tennis balls<span class="es" lang="es">Raqueta de pádel Kuikma PR 190 + 2 pelotas de tenis</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> PR 190 racket + 2 tennis balls.<span class="es" lang="es">Raqueta PR 190 + 2 pelotas de tenis.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$600mxn / $35USD</div>
+            <div class="compare">New (Decathlon) ~<span class="es" lang="es">Nuevo (Decathlon) ~</span><br><s>$800mxn / $46USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="usb-triple-foot-switch" data-title-en="USB triple foot-switch pedal" data-title-es="Pedal USB de triple interruptor" data-photos="[&quot;photos/PXL_20260826_135742336.jpg&quot;,&quot;photos/PXL_20260826_135808832.jpg&quot;,&quot;photos/PXL_20260826_135812229.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">13</span>
+          <img class="hero" src="photos/PXL_20260826_135742336.jpg" data-photo="photos/PXL_20260826_135742336.jpg" tabindex="0" role="button" alt="USB triple foot-switch pedal / Pedal USB de triple interruptor">
+          <div class="thumbs">
+            <button type="button" aria-label="Second angle" data-photo="photos/PXL_20260826_135808832.jpg">
+              <img src="photos/PXL_20260826_135808832.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>USB triple foot-switch pedal<span class="es" lang="es">Pedal USB de triple interruptor</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Triple pedal with attached USB-A cable. Great for Wispr Flow.<span class="es" lang="es">Pedal triple con cable USB-A. Ideal para Wispr Flow.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$500mxn / $30USD</div>
+            <div class="compare">New on Amazon ~<span class="es" lang="es">Nuevo en Amazon ~</span><br><s>$700mxn / $40USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="solar-power-bank" data-title-en="Solar power bank, 33,500 mAh (brand unknown)" data-title-es="Banco de energía solar, 33,500 mAh (marca desconocida)" data-photos="[&quot;photos/PXL_20260826_135034581.jpg&quot;,&quot;photos/PXL_20260826_135044541.jpg&quot;,&quot;photos/PXL_20260826_135057248.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">14</span>
+          <img class="hero" src="photos/PXL_20260826_135034581.jpg" data-photo="photos/PXL_20260826_135034581.jpg" tabindex="0" role="button" alt="Rugged solar power bank with orange bumpers / Banco de energía solar con protectores naranja">
+          <div class="thumbs">
+            <button type="button" aria-label="Front / flashlight / Frente / linterna" data-photo="photos/PXL_20260826_135044541.jpg">
+              <img src="photos/PXL_20260826_135044541.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Back / wireless pad / Reverso / carga inalámbrica" data-photo="photos/PXL_20260826_135057248.jpg">
+              <img src="photos/PXL_20260826_135057248.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Solar power bank, 33,500 mAh (brand unknown)<span class="es" lang="es">Banco de energía solar, 33,500 mAh (marca desconocida)</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> 33,500 mAh, 5.5V solar charging. Wireless Qi pad, two LED flashlights, 5 ports (3 USB-A, USB-C, micro-USB). Brand unknown.<span class="es" lang="es">33,500 mAh, carga solar 5.5 V. Pad Qi inalámbrico, dos linternas LED, 5 puertos (3 USB-A, USB-C, micro-USB). Marca desconocida.</span></p>
+          <p class="note">Make an offer. <span class="es" lang="es">Haz una oferta.</span></p>
+          <div class="price-row">
+            <div class="ask">$400mxn / $24USD</div>
+            <div class="compare">New ~<span class="es" lang="es">Nuevo ~</span><br><s>$800mxn / $47USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="corength-dip-belt" data-title-en="Corength weighted chain belt for dips and pull-ups" data-title-es="Cinturón Corength de cadena lastrada para fondos y dominadas" data-photos="[&quot;photos/PXL_20260826_183034306.jpg&quot;,&quot;photos/PXL_20260826_183054813.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">15</span>
+          <img class="hero" src="photos/PXL_20260826_183034306.jpg" data-photo="photos/PXL_20260826_183034306.jpg" tabindex="0" role="button" alt="Corength weighted chain belt with chain and carabiners / Cinturón Corength de cadena lastrada con cadena y mosquetones">
+          <div class="thumbs">
+            <button type="button" aria-label="Belt + chain / Cinturón y cadena" data-photo="photos/PXL_20260826_183054813.jpg">
+              <img src="photos/PXL_20260826_183054813.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Corength weighted chain belt for dips and pull-ups<span class="es" lang="es">Cinturón Corength de cadena lastrada para fondos y dominadas</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Belt, chain, and carabiners. For weighted dips and pull-ups.<span class="es" lang="es">Cinturón, cadena y mosquetones. Para fondos y dominadas con peso.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$350mxn / $20USD</div>
+            <div class="compare">New (Decathlon) ~<span class="es" lang="es">Nuevo (Decathlon) ~</span><br><s>$370mxn / $22USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="aeropress-original" data-title-en="AeroPress Original (gray) + filters" data-title-es="AeroPress Original (gris) + filtros" data-photos="[&quot;photos/PXL_20260826_182455052.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">16</span>
+          <img class="hero" src="photos/PXL_20260826_182455052.jpg" data-photo="photos/PXL_20260826_182455052.jpg" tabindex="0" role="button" alt="AeroPress Original gray chamber, plunger, filter cap, and paper filters / AeroPress Original gris con cámara, émbolo, tapa y filtros de papel">
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>AeroPress Original (gray) + filters<span class="es" lang="es">AeroPress Original (gris) + filtros</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Chamber, plunger, filter cap, paper filters.<span class="es" lang="es">Cámara, émbolo, tapa de filtro, filtros de papel.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$350mxn / $20USD</div>
+            <div class="compare">New on Amazon ~<span class="es" lang="es">Nuevo en Amazon ~</span><br><s>$700mxn / $40USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="wooden-gymnastic-rings" data-title-en="Mofele wooden gymnastic rings, 32 mm, with 4.5 m straps" data-title-es="Anillos de gimnasia Mofele de 32 mm, con correas de 4.5 m" data-photos="[&quot;photos/PXL_20260826_183347353.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">17</span>
+          <img class="hero" src="photos/PXL_20260826_183347353.jpg" data-photo="photos/PXL_20260826_183347353.jpg" tabindex="0" role="button" alt="Mofele wooden gymnastic rings with numbered 4.5 m straps / Anillos de gimnasia Mofele de madera con correas numeradas de 4.5 m">
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Mofele wooden gymnastic rings, 32 mm, with 4.5 m straps<span class="es" lang="es">Anillos de gimnasia Mofele de 32 mm, con correas de 4.5 m</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> 32 mm wooden rings + numbered black 4.5 m straps.<span class="es" lang="es">Anillos de madera de 32 mm + correas negras numeradas de 4.5 m.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$350mxn / $20USD</div>
+            <div class="compare">New<span class="es" lang="es">Nuevo</span><br><s>$500mxn / $29USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="neewer-5in1-reflector" data-title-en="Neewer 5-in-1 collapsible circular reflector, 43 in / 110 cm" data-title-es="Reflector circular plegable Neewer 5 en 1, 43 in / 110 cm" data-photos="[&quot;photos/PXL_20260826_133330010.jpg&quot;,&quot;photos/PXL_20260826_133350002.jpg&quot;,&quot;photos/PXL_20260826_133357118.jpg&quot;,&quot;photos/PXL_20260826_133420489.jpg&quot;,&quot;photos/PXL_20260826_133445475.jpg&quot;,&quot;photos/PXL_20260826_133501360.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">18</span>
+          <img class="hero" src="photos/PXL_20260826_133501360.jpg" data-photo="photos/PXL_20260826_133501360.jpg" tabindex="0" role="button" alt="Neewer 5-in-1 gold reflector, 43 in / 110 cm, opened on the floor / Reflector Neewer 5 en 1 dorado de 43 in / 110 cm abierto en el piso">
+          <div class="thumbs">
+            <button type="button" aria-label="Carry case / Estuche" data-photo="photos/PXL_20260826_133330010.jpg">
+              <img src="photos/PXL_20260826_133330010.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Silver side / Lado plata" data-photo="photos/PXL_20260826_133350002.jpg">
+              <img src="photos/PXL_20260826_133350002.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Neewer 5-in-1 collapsible circular reflector, 43 in / 110 cm<span class="es" lang="es">Reflector circular plegable Neewer 5 en 1, 43 in / 110 cm</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> 5-in-1 disc (gold/silver/white/black/translucent), 43 in / 110 cm, + NEEWER zippered case.<span class="es" lang="es">Disco 5 en 1 (oro/plata/blanco/negro/translúcido), 43 in / 110 cm, + estuche NEEWER.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$350mxn / $20USD</div>
+            <div class="compare">New<span class="es" lang="es">Nuevo</span><br><s>$510mxn / $30USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="bodum-bean-press" data-title-en="Bodum Bean cold-brew / French press (white)" data-title-es="Bodum Bean, prensa francesa / cold brew (blanca)" data-photos="[&quot;photos/PXL_20260826_183547442.jpg&quot;,&quot;photos/PXL_20260826_183554301.jpg&quot;,&quot;photos/PXL_20260826_183601265.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">19</span>
+          <img class="hero" src="photos/PXL_20260826_183547442.jpg" data-photo="photos/PXL_20260826_183547442.jpg" tabindex="0" role="button" alt="White Bodum press carafe with plunger and extra lid / Prensa Bodum blanca con émbolo y tapa extra">
+          <div class="thumbs">
+            <button type="button" aria-label="Carafe / Jarra" data-photo="photos/PXL_20260826_183554301.jpg">
+              <img src="photos/PXL_20260826_183554301.jpg" alt="">
+            </button>
+            <button type="button" aria-label="Plunger / Émbolo" data-photo="photos/PXL_20260826_183601265.jpg">
+              <img src="photos/PXL_20260826_183601265.jpg" alt="">
+            </button>
+          </div>
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Bodum Bean cold-brew / French press (white)<span class="es" lang="es">Bodum Bean, prensa francesa / cold brew (blanca)</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Carafe, plunger, extra fridge lid.<span class="es" lang="es">Jarra, émbolo, tapa extra para el refri.</span></p>
+          
+          <div class="price-row">
+            <div class="ask">$150mxn / $10USD</div>
+            <div class="compare">New on Amazon ~<span class="es" lang="es">Nuevo en Amazon ~</span><br><s>$250mxn / $15USD</s></div>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-id="cat5e-ethernet-cable" data-title-en="Amazon Basics Cat 6 Ethernet cable, 15.2 m" data-title-es="Cable Ethernet Amazon Basics Cat 6, 15.2 m" data-photos="[&quot;photos/PXL_20260826_182525065.jpg&quot;]">
+        <div class="photo">
+          <span class="idx">20</span>
+          <img class="hero" src="photos/PXL_20260826_182525065.jpg" data-photo="photos/PXL_20260826_182525065.jpg" tabindex="0" role="button" alt="Coiled black Amazon Basics Cat 6 ethernet cable, 15.2 m / Cable Ethernet Amazon Basics Cat 6 negro enrollado, 15.2 m">
+          <div class="stamp" aria-hidden="true"><span>SOLD<span class="es" lang="es">VENDIDO</span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <h2>Amazon Basics Cat 6 Ethernet cable, 15.2 m<span class="es" lang="es">Cable Ethernet Amazon Basics Cat 6, 15.2 m</span></h2>
+          </div>
+          <p class="inc"><strong>Included · Incluye</strong> Black Cat 6 RJ45 cable, 15.2 m (Amazon Basics).<span class="es" lang="es">Cable negro Cat 6 RJ45, 15.2 m (Amazon Basics).</span></p>
+          <p class="note">Make an offer. <span class="es" lang="es">Haz una oferta.</span></p>
+          <div class="price-row">
+            <div class="ask">$150mxn / $10USD</div>
+            <div class="compare">New ~<span class="es" lang="es">Nuevo ~</span><br><s>$300mxn / $18USD</s></div>
+          </div>
+        </div>
+      </article>
+
+    </main>
+
+    <footer class="colophon">
+      <p>All items in good condition and working order. Pickup preferred, or Uber delivery by request.<span class="es" lang="es">Todo en buen estado y funcionando. Se prefiere recoger en persona, o envío por Uber a petición.</span></p>
+      <div class="fine">Message me via WhatsApp<span class="es" lang="es">Escríbeme por WhatsApp</span></div>
+    </footer>
+  </div>
+
+
+<div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-labelledby="lb-caption">
+  <button type="button" class="lb-backdrop" tabindex="-1" aria-label="Close gallery / Cerrar galería"></button>
+  <button type="button" class="lb-close" aria-label="Close / Cerrar">&times;</button>
+  <div class="lb-stage">
+    <div class="lb-frame">
+      <button type="button" class="lb-prev" aria-label="Previous photo / Foto anterior">&#8249;</button>
+      <img class="lb-img" alt="">
+      <button type="button" class="lb-next" aria-label="Next photo / Foto siguiente">&#8250;</button>
+    </div>
+    <div class="lb-meta">
+      <div class="lb-caption" id="lb-caption"></div>
+      <div class="lb-counter"></div>
+    </div>
+    <div class="lb-strip" role="tablist" aria-label="Photos of this item / Fotos de este artículo"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  document.querySelectorAll("article.card").forEach(function (card) {
+    var photos = [];
+    try { photos = JSON.parse(card.getAttribute("data-photos") || "[]"); }
+    catch (e) { photos = []; }
+    var n = photos.length;
+    var photoBox = card.querySelector(".photo");
+    if (photoBox && !photoBox.querySelector(".photo-count")) {
+      var badge = document.createElement("span");
+      badge.className = "photo-count";
+      badge.textContent = n === 1 ? "1 photo · 1 foto" : n + " photos · " + n + " fotos";
+      photoBox.appendChild(badge);
+    }
+    var hero = card.querySelector("img.hero");
+    if (hero) {
+      var name = (card.querySelector("h2") || {}).textContent || "item";
+      var en = card.getAttribute("data-title-en") || name;
+      var es = card.getAttribute("data-title-es") || "";
+      hero.setAttribute("aria-label", n === 1
+        ? "View photo of " + en + (es ? " / Ver foto de " + es : "")
+        : "View " + n + " photos of " + en + (es ? " / Ver " + n + " fotos de " + es : ""));
+    }
+  });
+
+  var lb = document.getElementById("lightbox");
+  var lbImg = lb.querySelector(".lb-img");
+  var lbCaption = lb.querySelector(".lb-caption");
+  var lbCounter = lb.querySelector(".lb-counter");
+  var lbStrip = lb.querySelector(".lb-strip");
+  var btnPrev = lb.querySelector(".lb-prev");
+  var btnNext = lb.querySelector(".lb-next");
+  var btnClose = lb.querySelector(".lb-close");
+  var gallery = [];
+  var index = 0;
+  var title = "";
+  var lastFocus = null;
+  var isOpen = false;
+
+  function parsePhotos(card) {
+    try { return JSON.parse(card.getAttribute("data-photos") || "[]"); }
+    catch (e) { return []; }
+  }
+
+  function focusables() {
+    var nodes = [btnClose];
+    if (!lb.classList.contains("single")) {
+      nodes.push(btnPrev, btnNext);
+    }
+    lbStrip.querySelectorAll("button").forEach(function (b) { nodes.push(b); });
+    return nodes.filter(function (el) {
+      return el && !el.disabled && el.offsetParent !== null;
+    });
+  }
+
+  function show(i) {
+    if (!gallery.length) return;
+    index = (i + gallery.length) % gallery.length;
+    var src = gallery[index];
+    lbImg.setAttribute("src", src);
+    lbImg.setAttribute("alt", title + " — photo " + (index + 1) + " of " + gallery.length + " / foto " + (index + 1) + " de " + gallery.length);
+    lbCaption.textContent = title;
+    lbCounter.textContent = (index + 1) + " / " + gallery.length;
+    lbStrip.querySelectorAll("button").forEach(function (b, n) {
+      b.setAttribute("aria-current", n === index ? "true" : "false");
+      if (n === index) {
+        try { b.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" }); }
+        catch (e) {}
+      }
+    });
+    var preload = [gallery[(index + 1) % gallery.length], gallery[(index - 1 + gallery.length) % gallery.length]];
+    preload.forEach(function (p) {
+      if (p && p !== src) { var im = new Image(); im.src = p; }
+    });
+  }
+
+  function openLightbox(card, startSrc) {
+    gallery = parsePhotos(card);
+    if (!gallery.length) return;
+    var enT = (card.getAttribute("data-title-en") || "").trim();
+    var esT = (card.getAttribute("data-title-es") || "").trim();
+    title = enT && esT ? enT + " / " + esT : (enT || esT || ((card.querySelector("h2") || {}).textContent || "").trim());
+    var start = gallery.indexOf(startSrc);
+    if (start < 0) start = 0;
+    lastFocus = document.activeElement;
+    isOpen = true;
+    lb.hidden = false;
+    lb.classList.add("open");
+    lb.classList.toggle("single", gallery.length < 2);
+    document.documentElement.classList.add("lb-open");
+    lbStrip.innerHTML = "";
+    gallery.forEach(function (src, n) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-label", "Photo " + (n + 1) + " / Foto " + (n + 1));
+      var im = document.createElement("img");
+      im.src = src;
+      im.alt = "";
+      b.appendChild(im);
+      b.addEventListener("click", function () { show(n); });
+      lbStrip.appendChild(b);
+    });
+    show(start);
+    btnClose.focus();
+  }
+
+  function closeLightbox() {
+    if (!isOpen) return;
+    isOpen = false;
+    lb.classList.remove("open");
+    lb.hidden = true;
+    document.documentElement.classList.remove("lb-open");
+    lbImg.removeAttribute("src");
+    lbStrip.innerHTML = "";
+    if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
+  }
+
+  document.getElementById("catalog").addEventListener("click", function (e) {
+    var el = e.target.closest("[data-photo]");
+    if (!el || !document.getElementById("catalog").contains(el)) return;
+    var card = el.closest("article.card");
+    if (!card) return;
+    e.preventDefault();
+    openLightbox(card, el.getAttribute("data-photo"));
+  });
+
+  document.getElementById("catalog").addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var el = e.target.closest("img.hero[data-photo]");
+    if (!el) return;
+    e.preventDefault();
+    var card = el.closest("article.card");
+    if (!card) return;
+    openLightbox(card, el.getAttribute("data-photo"));
+  });
+
+  btnClose.addEventListener("click", closeLightbox);
+  lb.querySelector(".lb-backdrop").addEventListener("click", closeLightbox);
+  btnPrev.addEventListener("click", function () { show(index - 1); });
+  btnNext.addEventListener("click", function () { show(index + 1); });
+
+  document.addEventListener("keydown", function (e) {
+    if (!isOpen) return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      closeLightbox();
+      return;
+    }
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      show(index - 1);
+      return;
+    }
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      show(index + 1);
+      return;
+    }
+    if (e.key === "Tab") {
+      var f = focusables();
+      if (!f.length) return;
+      var i = f.indexOf(document.activeElement);
+      if (e.shiftKey) {
+        if (i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+      } else {
+        if (i === -1 || i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+      }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
