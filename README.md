@@ -1,5 +1,5 @@
-# Stuff for sale
+# CDMX sale
 
-Roma Sur. Pickup preferred, or Uber delivery by request.
+Public catalog: https://ross-code.github.io/cdmx-sale/
 
-https://ross-code.github.io/moving-sale/
+Roma Sur · bilingual EN/ES · Stuff for sale
