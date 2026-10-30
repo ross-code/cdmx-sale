@@ -667,3 +667,8 @@
   .crosslink-arrow { font-family: var(--display); font-size: 30px; color: var(--wax); flex: 0 0 auto; }
   .crosslink.back { justify-content: flex-start; }
   @media print { .crosslink { display: none !important; } }
+
+  .wa-link { display: inline-flex; align-items: flex-start; gap: 6px; color: inherit; text-decoration: underline; text-decoration-color: #25D366; text-underline-offset: 3px; }
+  .wa-link:hover { color: #128C7E; }
+  .wa-link > span { display: inline-block; }
+  .wa-icon { flex: none; width: 1.15em; height: 1.15em; margin-top: .05em; }
